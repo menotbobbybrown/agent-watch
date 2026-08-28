@@ -30,12 +30,12 @@ With `agent-watch` you can paste a URL or a local path, ask a question, and the 
 
 ### Quick Run via NPX (Instant / Zero-Install)
 ```bash
-npx agent-watch https://youtu.be/dQw4w9WgXcQ --agentic
+npx @modelnorth/agent-watch https://youtu.be/dQw4w9WgXcQ --agentic
 ```
 
 Or install globally via npm / pip:
 ```bash
-npm install -g agent-watch
+npm install -g @modelnorth/agent-watch
 pip install agent-watch
 ```
 
