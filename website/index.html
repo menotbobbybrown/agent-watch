@@ -1,0 +1,604 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>agent-watch — Give Any AI Agent Eyes & Ears</title>
+  <meta name="description" content="agent-watch gives any AI agent (Antigravity, Claude Code, Codex, Cursor, Copilot, Gemini) the ability to watch any video — YouTube, local files, TikTok, Loom. Scene-aware frames, timestamped transcripts, deduplication." />
+  <meta name="og:title" content="agent-watch" />
+  <meta name="og:description" content="Give Any AI Agent Eyes &amp; Ears." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- SCANLINE OVERLAY -->
+<div class="scanlines" aria-hidden="true"></div>
+
+<!-- ═══════════════════════════════════════════════
+     NAV
+════════════════════════════════════════════════ -->
+<header class="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <span class="logo-bracket">[ </span>
+      <span class="logo-text">agent-watch</span>
+      <span class="logo-bracket"> ]</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#how-it-works">How it works</a>
+      <a href="#detail-modes">Detail modes</a>
+      <a href="#install">Install</a>
+      <a href="https://github.com/menotbobbybrown/agent-watch" target="_blank" rel="noopener" class="nav-gh">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        GitHub
+      </a>
+    </nav>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="container">
+
+    <div class="hero-badge">
+      <span class="badge badge-amber">OPEN SOURCE</span>
+      <span class="badge badge-cyan">MIT</span>
+      <span class="badge badge-muted">50+ AGENT HOSTS</span>
+    </div>
+
+    <div class="viewfinder-frame">
+      <h1 class="hero-title">Give Any AI Agent<br /><span class="cyan-text">Eyes &amp; Ears.</span></h1>
+    </div>
+
+    <p class="hero-sub">
+      Paste a URL or local path. The agent fetches captions, downloads only what it needs,
+      extracts scene-aware frames, and returns timestamped visual intelligence.
+      Works on <strong>Antigravity, Claude Code, Codex, Cursor, Copilot, Gemini CLI</strong>, and 50+ hosts.
+    </p>
+
+    <!-- TERMINAL DEMO -->
+    <div class="terminal-demo">
+      <div class="terminal-bar">
+        <span class="t-dot t-red"></span>
+        <span class="t-dot t-amber"></span>
+        <span class="t-dot t-green"></span>
+        <span class="t-title">agent terminal</span>
+      </div>
+      <div class="terminal-body">
+        <div class="t-line"><span class="t-prompt">$</span> <span class="t-cmd" id="typed-cmd"></span><span class="t-cursor" id="t-cursor">▋</span></div>
+        <div class="t-output" id="t-output" style="display:none;">
+          <div class="t-response">
+            <span class="t-label emerald-text">✓ captions fetched</span>  <span class="t-muted">yt-dlp · 0.4s</span>
+          </div>
+          <div class="t-response">
+            <span class="t-label emerald-text">✓ frames extracted</span>  <span class="t-muted">ffmpeg · scene-aware · 87 candidates → <span class="cyan-text">52 frames</span> (35 near-dupes dropped)</span>
+          </div>
+          <div class="frames-preview" id="frames-preview">
+            <div class="frame-chip active" style="animation-delay:0s">FRAME 0001 · <span class="amber-text">t=00:00</span></div>
+            <div class="frame-chip" style="animation-delay:.08s">FRAME 0007 · <span class="amber-text">t=00:23</span></div>
+            <div class="frame-chip" style="animation-delay:.16s">FRAME 0014 · <span class="amber-text">t=00:51</span></div>
+            <div class="frame-chip" style="animation-delay:.24s">FRAME 0021 · <span class="amber-text">t=01:18</span></div>
+            <div class="frame-chip" style="animation-delay:.32s">FRAME 0038 · <span class="amber-text">t=02:04</span></div>
+            <div class="frame-chip" style="animation-delay:.40s">+ 47 more</div>
+          </div>
+          <div class="t-response t-answer">
+            <span class="t-label cyan-text">▶ AGENT:</span>
+            <span class="t-muted"> At <span class="amber-text">[t=00:32]</span>, the presenter opens by showing the broken network request in Chrome DevTools — the status code flips to <span class="amber-text">401</span> and a red border flashes on the login form. The bug appears to be a missing auth header on the preflight OPTIONS call.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INSTALL BUTTONS -->
+    <div class="install-group">
+      <div class="install-card primary-install">
+        <div class="install-header">
+          <span class="badge badge-cyan">CLAUDE CODE</span>
+          <span class="install-sub">Recommended — auto-updates via marketplace</span>
+        </div>
+        <div class="install-cmd-wrap">
+          <code class="install-cmd" id="cmd-cc1">/plugin marketplace add menotbobbybrown/agent-watch</code>
+          <button class="copy-btn" data-target="cmd-cc1" title="Copy">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          </button>
+        </div>
+        <div class="install-cmd-wrap">
+          <code class="install-cmd" id="cmd-cc2">/plugin install watch@agent-watch</code>
+          <button class="copy-btn" data-target="cmd-cc2" title="Copy">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="install-card">
+        <div class="install-header">
+          <span class="badge badge-amber">CODEX · CURSOR · COPILOT · GEMINI · +50</span>
+        </div>
+        <div class="install-cmd-wrap">
+          <code class="install-cmd" id="cmd-npx">npx skills add menotbobbybrown/agent-watch -g</code>
+          <button class="copy-btn" data-target="cmd-npx" title="Copy">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          </button>
+        </div>
+        <p class="install-note"><code>-g</code> installs globally across all projects. Drop it to scope per-project.</p>
+      </div>
+    </div>
+
+    <p class="hero-footnote">Zero config to start. <code>yt-dlp</code> and <code>ffmpeg</code> install on first run. Captions are free for most public videos — Whisper API key only needed as fallback.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     AGENTS COMPATIBILITY
+════════════════════════════════════════════════ -->
+<section class="section-agents" id="install">
+  <div class="container">
+    <div class="section-label">AGENT COMPATIBILITY</div>
+    <h2>Works everywhere agents work.</h2>
+    <p class="section-sub">One skill, installed once, available across every host you use.</p>
+
+    <div class="agents-grid">
+      <div class="agent-card">
+        <div class="agent-name">Antigravity</div>
+        <div class="agent-install">
+          <code>/plugin marketplace add menotbobbybrown/agent-watch</code>
+        </div>
+        <div class="agent-badge badge badge-cyan">SUPPORTED</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-name">Claude Code</div>
+        <div class="agent-install">
+          <code>/plugin marketplace add menotbobbybrown/agent-watch</code>
+        </div>
+        <div class="agent-badge badge badge-cyan">SUPPORTED</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-name">Codex</div>
+        <div class="agent-install">
+          <code>npx skills add menotbobbybrown/agent-watch -g</code>
+        </div>
+        <div class="agent-badge badge badge-emerald">SUPPORTED</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-name">Cursor</div>
+        <div class="agent-install">
+          <code>npx skills add menotbobbybrown/agent-watch -g</code>
+        </div>
+        <div class="agent-badge badge badge-emerald">SUPPORTED</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-name">GitHub Copilot</div>
+        <div class="agent-install">
+          <code>npx skills add menotbobbybrown/agent-watch -g</code>
+        </div>
+        <div class="agent-badge badge badge-emerald">SUPPORTED</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-name">Gemini CLI</div>
+        <div class="agent-install">
+          <code>npx skills add menotbobbybrown/agent-watch -g</code>
+        </div>
+        <div class="agent-badge badge badge-emerald">SUPPORTED</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-name">claude.ai (web)</div>
+        <div class="agent-install">
+          <code>Download watch.skill → Settings → Capabilities → Skills → +</code>
+        </div>
+        <div class="agent-badge badge badge-muted">UPLOAD</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-name">+50 Agent Skills hosts</div>
+        <div class="agent-install">
+          <code>npx skills add menotbobbybrown/agent-watch -g</code>
+        </div>
+        <div class="agent-badge badge badge-muted">VIA agentskills.io</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     USE CASES
+════════════════════════════════════════════════ -->
+<section class="section-uses">
+  <div class="container">
+    <div class="section-label">USE CASES</div>
+    <h2>What people actually use it for.</h2>
+
+    <div class="uses-grid">
+      <div class="use-card">
+        <div class="use-icon amber-text">▶</div>
+        <h3>Analyze competitor content</h3>
+        <p>
+          <code class="inline-cmd">/watch https://youtu.be/... what hook did they open with?</code>
+        </p>
+        <p class="use-desc">The agent watches the first frames, reads the opening transcript, breaks down the structure. Ad creative, competitor launches, podcast intros — any video where <em>how</em> matters as much as <em>what</em>.</p>
+      </div>
+
+      <div class="use-card">
+        <div class="use-icon amber-text">◉</div>
+        <h3>Diagnose a bug from a recording</h3>
+        <p>
+          <code class="inline-cmd">/watch bug-repro.mov what's going wrong?</code>
+        </p>
+        <p class="use-desc">Someone sends a screen recording. The agent finds the frame where the issue appears, describes what's on screen, often catches the cause without you ever opening the file.</p>
+      </div>
+
+      <div class="use-card">
+        <div class="use-icon amber-text">⊘</div>
+        <h3>Cut the hype out of a launch video</h3>
+        <p>
+          <code class="inline-cmd">/watch https://youtu.be/... what's actually new — skip the hype</code>
+        </p>
+        <p class="use-desc">Strip a "game-changer" feature drop down to the few things that matter. Get the substance without ten minutes of intro and overselling.</p>
+      </div>
+
+      <div class="use-card">
+        <div class="use-icon amber-text">≡</div>
+        <h3>Turn a playlist into notes</h3>
+        <p>
+          <code class="inline-cmd">/watch https://youtu.be/... summarize this to a note</code>
+        </p>
+        <p class="use-desc">Run it across a course or series. A channel becomes a searchable set of timestamped notes instead of hours you have to sit through.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     HOW IT WORKS
+════════════════════════════════════════════════ -->
+<section class="section-how" id="how-it-works">
+  <div class="container">
+    <div class="section-label">HOW IT WORKS</div>
+    <h2>Seven steps. The agent does all of them.</h2>
+
+    <div class="steps-list">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <h3>You paste a video and a question.</h3>
+          <p>URL (anything yt-dlp supports — YouTube, Loom, TikTok, X, Instagram, 400+ more) or a local path (<code>.mp4</code>, <code>.mov</code>, <code>.mkv</code>, <code>.webm</code>).</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <h3>yt-dlp checks captions first.</h3>
+          <p>At <code>transcript</code> detail, captioned URLs return without downloading video at all. Otherwise downloads only what the run needs.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <h3>ffmpeg extracts frames at the chosen detail.</h3>
+          <p><code>efficient</code> decodes keyframes only (~0.5s). <code>balanced</code> prefers scene-change frames. JPEGs are 512px wide, clamped to 1998px tall.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-body">
+          <h3>Deduplication drops near-identical frames.</h3>
+          <p>A 16×16 pixel brightness delta pass drops frames visually identical to the last kept one. A slide held for 90 seconds collapses to one frame. Budget is spent on distinct content.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">05</div>
+        <div class="step-body">
+          <h3>Transcript from captions or Whisper.</h3>
+          <p>First try: native captions — free, instant. Fallback: extract mono 16kHz audio (~480kB/min) and send to Whisper via Groq (<code>whisper-large-v3</code>, preferred) or OpenAI.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">06</div>
+        <div class="step-body">
+          <h3>Frames + transcript handed to the agent.</h3>
+          <p>Frame paths with <code>t=MM:SS</code> markers and timestamped transcript. The agent reads each frame in parallel as images in its context.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">07</div>
+        <div class="step-body">
+          <h3>The agent answers — grounded in what's on screen.</h3>
+          <p>Not "based on the description." It saw the frames. It heard the transcript. Cleanup removes the working directory when you're done.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     DETAIL MODES CALCULATOR
+════════════════════════════════════════════════ -->
+<section class="section-modes" id="detail-modes">
+  <div class="container">
+    <div class="section-label">DETAIL MODES</div>
+    <h2>One dial. Speed vs. coverage.</h2>
+    <p class="section-sub">Measured on a real 49-minute YouTube video (1280×720, English auto-captions, mostly-static screen recording).</p>
+
+    <div class="modes-tabs">
+      <button class="mode-tab active" data-mode="transcript">transcript</button>
+      <button class="mode-tab" data-mode="efficient">efficient</button>
+      <button class="mode-tab" data-mode="balanced">balanced</button>
+      <button class="mode-tab" data-mode="token-burner">token-burner</button>
+    </div>
+
+    <div class="mode-panel" id="mode-transcript">
+      <div class="mode-stats">
+        <div class="stat">
+          <div class="stat-val cyan-text">~4.5s</div>
+          <div class="stat-label">Extraction time</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val">0</div>
+          <div class="stat-label">Frames</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val">0</div>
+          <div class="stat-label">Image tokens</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val amber-text">~26.6k</div>
+          <div class="stat-label">Text tokens</div>
+        </div>
+      </div>
+      <div class="mode-desc">
+        <p>Caption-only. Captions are fetched without downloading video. Full temporal coverage — text only. Use this when you need a transcript or summary and don't need visual inspection.</p>
+        <p><strong>Engine:</strong> <code>yt-dlp</code> caption pull only · <strong>Cap:</strong> — · <strong>Coverage:</strong> Full (text)</p>
+        <div class="mode-cmd">
+          <code>--detail transcript</code>
+          <span class="or-default">or set <code>WATCH_DETAIL=transcript</code> in <code>~/.config/watch/.env</code></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mode-panel hidden" id="mode-efficient">
+      <div class="mode-stats">
+        <div class="stat">
+          <div class="stat-val cyan-text">~0.5s</div>
+          <div class="stat-label">Extraction time</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val">50</div>
+          <div class="stat-label">Frames (cap)</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val amber-text">~9.8k</div>
+          <div class="stat-label">Image tokens</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val">Full</div>
+          <div class="stat-label">Coverage</div>
+        </div>
+      </div>
+      <div class="mode-desc">
+        <p>Keyframe-only decode (<code>-skip_frame nokey</code>). ~40× faster than scene modes because it only reconstructs keyframes — doesn't decode every frame to find cuts. Can return <em>more</em> frames than balanced on low-motion footage (keyframes outnumber scene cuts).</p>
+        <p><strong>Engine:</strong> ffmpeg keyframe decode · <strong>Cap:</strong> 50 · <strong>Coverage:</strong> 0:00 → end (full)</p>
+        <div class="mode-cmd">
+          <code>--detail efficient</code>
+        </div>
+      </div>
+    </div>
+
+    <div class="mode-panel hidden" id="mode-balanced">
+      <div class="mode-stats">
+        <div class="stat">
+          <div class="stat-val cyan-text">~20.9s</div>
+          <div class="stat-label">Extraction time</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val">100</div>
+          <div class="stat-label">Frames (cap)</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val amber-text">~19.7k</div>
+          <div class="stat-label">Image tokens</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val">Full</div>
+          <div class="stat-label">Coverage</div>
+        </div>
+      </div>
+      <div class="mode-desc">
+        <p>Scene-change detection. Detects all scene-cut candidates across the full range, then even-samples down to 100. First and last frame always kept. Default mode — the right choice for most use cases.</p>
+        <p><strong>Engine:</strong> ffmpeg scene-change detection · <strong>Cap:</strong> 100 · <strong>Coverage:</strong> 0:00 → end (full)</p>
+        <div class="mode-cmd">
+          <code>--detail balanced</code>
+          <span class="or-default">Default mode — no flag needed</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mode-panel hidden" id="mode-token-burner">
+      <div class="mode-stats">
+        <div class="stat">
+          <div class="stat-val cyan-text">~21.0s</div>
+          <div class="stat-label">Extraction time</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val">∞</div>
+          <div class="stat-label">Frames (uncapped)</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val amber-text">~22.8k+</div>
+          <div class="stat-label">Image tokens</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val">Full</div>
+          <div class="stat-label">Coverage</div>
+        </div>
+      </div>
+      <div class="mode-desc">
+        <p>Same engine as <code>balanced</code> but uncapped — keeps every scene-change frame. On high-motion video with hundreds of cuts this can hit 250+ frames. Trips the token warning at that point. Use for exhaustive analysis of dense footage where you can't miss a frame.</p>
+        <p><strong>Engine:</strong> ffmpeg scene-change detection · <strong>Cap:</strong> none · <strong>Coverage:</strong> Full</p>
+        <div class="mode-cmd">
+          <code>--detail token-burner</code>
+        </div>
+      </div>
+    </div>
+
+    <!-- Frame budget table -->
+    <div class="budget-table-wrap">
+      <div class="section-label" style="margin-top:3rem">FRAME BUDGET BY VIDEO LENGTH</div>
+      <table class="budget-table">
+        <thead>
+          <tr>
+            <th>Duration</th>
+            <th>Default frame budget</th>
+            <th>What you get</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>≤ 30s</td><td class="cyan-text">~30 frames</td><td>Dense — basically every key moment</td></tr>
+          <tr><td>30s – 1min</td><td class="cyan-text">~40 frames</td><td>Still dense</td></tr>
+          <tr><td>1 – 3min</td><td class="cyan-text">~60 frames</td><td>Comfortable</td></tr>
+          <tr><td>3 – 10min</td><td class="cyan-text">~80 frames</td><td>Sparse but workable</td></tr>
+          <tr><td>> 10min</td><td class="amber-text">100 frames (capped modes)</td><td>"Sparse scan" warning — re-run focused, or use token-burner</td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">Tip: when the user names a moment ("around 2:30", "the last 30 seconds"), use <code>--start</code> / <code>--end</code>. Focused mode gets denser per-second budgets, capped at 2 fps.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     KEYS & COST
+════════════════════════════════════════════════ -->
+<section class="section-keys">
+  <div class="container">
+    <div class="section-label">WHAT YOU NEED</div>
+    <h2>Captions are free. Whisper is cheap.</h2>
+    <p class="section-sub">Captions cover the majority of public videos. Whisper only kicks in when there are genuinely no captions — local files, TikToks, some Vimeos.</p>
+
+    <div class="keys-table-wrap">
+      <table class="budget-table">
+        <thead>
+          <tr>
+            <th>Capability</th>
+            <th>What you need</th>
+            <th>Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Download + native captions</td>
+            <td><code>yt-dlp</code> + <code>ffmpeg</code></td>
+            <td class="emerald-text">Free</td>
+          </tr>
+          <tr>
+            <td>Whisper fallback (preferred)</td>
+            <td>Groq API key — <code>whisper-large-v3</code></td>
+            <td class="cyan-text">Cheap, fast</td>
+          </tr>
+          <tr>
+            <td>Whisper fallback (alt)</td>
+            <td>OpenAI API key — <code>whisper-1</code></td>
+            <td>Standard pricing</td>
+          </tr>
+          <tr>
+            <td>Disable Whisper entirely</td>
+            <td><code>--no-whisper</code></td>
+            <td class="emerald-text">Free — frames only</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="setup-note">
+      <div class="setup-note-icon amber-text">◎</div>
+      <div class="setup-note-body">
+        <strong>First run setup is automatic.</strong> On the first <code>/watch</code> call, the skill checks for <code>ffmpeg</code> / <code>yt-dlp</code>. If missing: macOS auto-runs <code>brew install ffmpeg yt-dlp</code>. Linux/Windows print exact commands. After that, preflight is silent — sub-100ms on every run.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     USAGE EXAMPLES
+════════════════════════════════════════════════ -->
+<section class="section-usage">
+  <div class="container">
+    <div class="section-label">USAGE</div>
+    <h2>Just describe what you want to see.</h2>
+
+    <div class="usage-examples">
+      <div class="usage-group">
+        <div class="usage-label">Basic</div>
+        <div class="usage-cmds">
+          <div class="usage-cmd"><code>/watch https://youtu.be/dQw4w9WgXcQ what happens at the 30 second mark?</code></div>
+          <div class="usage-cmd"><code>/watch https://www.tiktok.com/@user/video/123 summarize this</code></div>
+          <div class="usage-cmd"><code>/watch ~/Movies/screen-recording.mp4 when does the UI break?</code></div>
+          <div class="usage-cmd"><code>/watch https://vimeo.com/123 what tools does she mention?</code></div>
+        </div>
+      </div>
+
+      <div class="usage-group">
+        <div class="usage-label">Focused window (denser frame budget, lower token cost)</div>
+        <div class="usage-cmds">
+          <div class="usage-cmd"><code>/watch https://youtu.be/abc --start 2:15 --end 2:45</code></div>
+          <div class="usage-cmd"><code>/watch video.mp4 --start 50 --end 60</code></div>
+          <div class="usage-cmd"><code>/watch "$URL" --start 1:12:00  <span class="t-muted"># from 1h12m to end</span></code></div>
+        </div>
+      </div>
+
+      <div class="usage-group">
+        <div class="usage-label">Power flags</div>
+        <div class="flags-grid">
+          <div class="flag-row"><code>--detail transcript|efficient|balanced|token-burner</code> <span>Fidelity/speed dial</span></div>
+          <div class="flag-row"><code>--timestamps T1,T2,…</code> <span>Grab a frame at exact timestamps</span></div>
+          <div class="flag-row"><code>--max-frames N</code> <span>Lower frame cap for tighter token budget</span></div>
+          <div class="flag-row"><code>--resolution 1024</code> <span>Bump frame width for reading code/slides</span></div>
+          <div class="flag-row"><code>--no-whisper</code> <span>Disable transcription — frames only</span></div>
+          <div class="flag-row"><code>--no-dedup</code> <span>Keep near-duplicate frames</span></div>
+          <div class="flag-row"><code>--whisper groq|openai</code> <span>Force specific Whisper backend</span></div>
+          <div class="flag-row"><code>--out-dir DIR</code> <span>Keep working files at a specific path</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-left">
+        <div class="footer-logo">
+          <span class="logo-bracket">[ </span>
+          <span class="logo-text">agent-watch</span>
+          <span class="logo-bracket"> ]</span>
+        </div>
+        <p class="footer-desc">MIT license. Built on yt-dlp, ffmpeg, and multimodal AI vision tools.<br />Whisper transcription via Groq or OpenAI.</p>
+        <p class="footer-credit">Built by menotbobbybrown &amp; Antigravity Engineering.</p>
+      </div>
+      <div class="footer-right">
+        <div class="footer-links">
+          <a href="https://github.com/menotbobbybrown/agent-watch" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://agentskills.io" target="_blank" rel="noopener">Agent Skills</a>
+          <a href="https://github.com/menotbobbybrown/agent-watch/releases/latest" target="_blank" rel="noopener">Releases</a>
+          <a href="https://www.solarisautomation.io/" target="_blank" rel="noopener">Solaris Automation</a>
+          <a href="https://www.youtube.com/@menotbobbybrown" target="_blank" rel="noopener">YouTube</a>
+        </div>
+        <div class="footer-install">
+          <code>npx skills add menotbobbybrown/agent-watch -g</code>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="t-muted">agent-watch · github.com/menotbobbybrown/agent-watch · MIT</span>
+      <span class="footer-sig amber-text">[ t=END ]</span>
+    </div>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
