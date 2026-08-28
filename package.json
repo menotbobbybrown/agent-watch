@@ -1,6 +1,6 @@
 {
   "name": "@modelnorth/agent-watch",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Universal video engine for any AI agent: download video, extract frames, surface transcripts, and run autonomous visual analysis.",
   "main": "lib/index.js",
   "bin": {
