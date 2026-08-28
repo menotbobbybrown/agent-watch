@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agent-watch"
+version = "1.0.0"
+description = "Universal video engine for any AI agent: download video, extract frames, and surface transcripts."
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [
+    {name = "menotbobbybrown & Antigravity Engineering"}
+]
+keywords = ["ai-agent", "video-processing", "yt-dlp", "ffmpeg", "whisper", "agent-skills"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+]
+
+dependencies = [
+    "yt-dlp>=2024.0.0",
+]
+
+[project.scripts]
+agent-watch = "skills.watch.scripts.watch:main"
+agentwatch = "skills.watch.scripts.watch:main"
+
+[project.urls]
+Homepage = "https://github.com/menotbobbybrown/agent-watch"
+Repository = "https://github.com/menotbobbybrown/agent-watch"
