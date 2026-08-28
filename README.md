@@ -28,6 +28,17 @@ With `agent-watch` you can paste a URL or a local path, ask a question, and the 
 /watch https://youtu.be/dQw4w9WgXcQ what happens at the 30 second mark?
 ```
 
+### Quick Run via NPX (Instant / Zero-Install)
+```bash
+npx agent-watch https://youtu.be/dQw4w9WgXcQ --agentic
+```
+
+Or install globally via npm / pip:
+```bash
+npm install -g agent-watch
+pip install agent-watch
+```
+
 ## What people actually use it for
 
 **Analyze someone else's content.** `/watch https://youtu.be/<viral-video> what hook did they open with?` The agent looks at the first frames, reads the opening transcript, breaks down the structure. Same for ad creative, competitor launches, podcast intros, anything where the *how* matters as much as the *what*.

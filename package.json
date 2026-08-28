@@ -1,0 +1,39 @@
+{
+  "name": "agent-watch",
+  "version": "1.0.0",
+  "description": "Universal video engine for any AI agent: download video, extract frames, surface transcripts, and run autonomous visual analysis.",
+  "main": "lib/index.js",
+  "bin": {
+    "agent-watch": "./bin/agent-watch.js",
+    "agentwatch": "./bin/agent-watch.js"
+  },
+  "scripts": {
+    "test": "python -m pytest -v",
+    "start": "node bin/agent-watch.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/menotbobbybrown/agent-watch.git"
+  },
+  "keywords": [
+    "ai-agent",
+    "video-processing",
+    "yt-dlp",
+    "ffmpeg",
+    "whisper",
+    "ocr",
+    "multimodal",
+    "claude",
+    "antigravity",
+    "npx"
+  ],
+  "author": "menotbobbybrown & Antigravity Engineering <menotbobbybrown@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/menotbobbybrown/agent-watch/issues"
+  },
+  "homepage": "https://github.com/menotbobbybrown/agent-watch#readme",
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
