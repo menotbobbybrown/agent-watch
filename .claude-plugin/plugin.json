@@ -1,0 +1,12 @@
+{
+  "name": "watch",
+  "version": "0.2.0",
+  "description": "Let any AI agent watch a video. Downloads with yt-dlp, extracts auto-scaled frames with ffmpeg, pulls captions or falls back to Whisper, and hands frames + transcript to Claude so it can answer questions about the video.",
+  "author": {
+    "name": "menotbobbybrown"
+  },
+  "homepage": "https://github.com/menotbobbybrown/agent-watch",
+  "repository": "https://github.com/menotbobbybrown/agent-watch",
+  "license": "MIT",
+  "keywords": ["video", "watch", "youtube", "vimeo", "tiktok", "transcription", "whisper", "yt-dlp", "ffmpeg", "multimodal", "frames"]
+}
