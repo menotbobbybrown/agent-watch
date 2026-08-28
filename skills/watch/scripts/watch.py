@@ -91,6 +91,7 @@ def main() -> int:
         default=None,
         help="Preferred subtitle language pattern (default: .*-orig,en.*).",
     )
+    ap.add_argument("--agentic", action="store_true", help="Enable autonomous Agentic mode: auto-tune detail, OCR, chapters, and generate agent_digest.json.")
     ap.add_argument("--ocr", action="store_true", help="Run OCR text extraction on extracted frames (slides, terminal, code).")
     ap.add_argument("--diarize", action="store_true", help="Enable speaker diarization attribution.")
     ap.add_argument("--chapters", action="store_true", help="Generate automated topic chapter breakpoints.")
@@ -271,6 +272,17 @@ def main() -> int:
         from transcribe import generate_chapters
         chapters = generate_chapters(transcript_segments)
 
+    
+    # Agentic Autonomous Mode logic
+    if args.agentic:
+        print("[agent-watch] Agentic Mode activated: autonomous decision loop enabled", file=sys.stderr)
+        args.ocr = True
+        args.chapters = True
+        if full_duration > 300:
+            args.detail = "balanced"
+        elif full_duration < 60:
+            args.detail = "efficient"
+
     info = dl.get("info") or {}
 
     print()
@@ -306,6 +318,16 @@ def main() -> int:
         print(f"- **Transcript:** available ({transcript_source})")
     else:
         print("- **Transcript:** none available")
+
+    print()
+    print("## Summary (TLDR)")
+    print()
+    title_str = f" for '{info.get('title')}'" if info.get("title") else ""
+    t_source_str = f"with {transcript_source} transcript" if transcript_source else "without transcript"
+    ocr_count = len([f for f in frames if f.get("ocr_text")])
+    ocr_str = f", {ocr_count} OCR text blocks" if ocr_count else ""
+    chap_str = f", {len(chapters)} topic chapters" if chapters else ""
+    print(f"Processed video{title_str} ({format_time(full_duration)}): {len(frames)} frames extracted {t_source_str}{chap_str}{ocr_str}.")
 
     print()
     if frames:
@@ -365,6 +387,21 @@ def main() -> int:
     if args.serve:
         from serve import serve_dashboard
         serve_dashboard(work)
+
+    
+    if args.agentic:
+        digest_file = work / "agent_digest.json"
+        digest_data = {
+            "source": args.source,
+            "title": info.get("title") or args.source,
+            "duration": full_duration,
+            "frame_count": len(frames),
+            "chapters_count": len(chapters),
+            "transcript_line_count": len(transcript_segments),
+            "ocr_snippets_count": len([f for f in frames if f.get("ocr_text")]),
+        }
+        digest_file.write_text(json.dumps(digest_data, indent=2), encoding="utf-8")
+        print(f"[agent-watch] Agentic Digest saved to `{digest_file}`", file=sys.stderr)
 
     print(f"Working directory: `{work}`")
     return 0

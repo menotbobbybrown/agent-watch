@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# dev-sync.sh — copy this working tree into the installed /watch plugin cache so
+# agent-sync.sh — copy this working tree into the installed /watch plugin cache so
 # local edits are picked up by Claude Code without publishing a release.
 #
 # The install path is resolved from ~/.claude/plugins/installed_plugins.json, so
@@ -8,9 +8,9 @@
 # setting WATCH_INSTALL_PATH. Pass --dry-run to preview without writing.
 #
 # Usage:
-#   ./dev-sync.sh                 # sync into the resolved install path
-#   ./dev-sync.sh --dry-run       # show what would change
-#   ./dev-sync.sh /some/other/dir # sync into an explicit path
+#   ./agent-sync.sh                 # sync into the resolved install path
+#   ./agent-sync.sh --dry-run       # show what would change
+#   ./agent-sync.sh /some/other/dir # sync into an explicit path
 #
 set -euo pipefail
 
@@ -55,7 +55,7 @@ fi
 
 if [[ -z "$DEST" ]]; then
   echo "error: could not resolve an install path for '$PLUGIN_KEY'" >&2
-  echo "       install the plugin first, or pass a path: scripts/dev-sync.sh /path/to/install" >&2
+  echo "       install the plugin first, or pass a path: ./agent-sync.sh /path/to/install" >&2
   exit 1
 fi
 if [[ ! -d "$DEST" ]]; then
@@ -81,7 +81,7 @@ rsync -a ${DRY_RUN[@]+"${DRY_RUN[@]}"} \
   --exclude 'docs/' \
   --exclude 'dist/' \
   --exclude 'V2_*.md' \
-  --exclude 'dev-sync.sh' \
+  --exclude 'agent-sync.sh' \
   "$REPO_ROOT/" "$DEST/"
 
 echo "done."

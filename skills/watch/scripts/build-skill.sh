@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# build-skill.sh — package the watch skill as a claude.ai-upload-ready .skill file.
+# build-skill.sh — package the agent-watch skill as a web-upload-ready .skill file.
 # Usage: bash skills/watch/scripts/build-skill.sh   (run from anywhere)
 #
 # Produces dist/watch.skill, a zip with a single top-level `watch/` directory
@@ -17,7 +17,7 @@ if ! git diff --quiet || ! git diff --cached --quiet; then
 fi
 
 mkdir -p dist
-OUT="dist/watch.skill"
+OUT="dist/agent-watch.skill"
 git archive --format=zip --prefix=watch/ --output="$OUT" HEAD:skills/watch
 
 COUNT=$(unzip -l "$OUT" | tail -1 | awk '{print $2}')
@@ -36,4 +36,4 @@ if [ "$SKILL_MD_COUNT" -ne 1 ]; then
 fi
 
 echo "built $OUT ($COUNT files, $SIZE)"
-echo "upload via the claude.ai skill UI"
+echo "upload via your AI agent skill UI"

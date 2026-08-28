@@ -1,0 +1,10 @@
+{
+  "name": "agent-watch",
+  "version": "1.0.0",
+  "description": "Universal AI agent video engine: watch, extract scene frames, transcribe, and analyze videos.",
+  "author": {
+    "name": "menotbobbybrown & Antigravity Engineering"
+  },
+  "homepage": "https://github.com/menotbobbybrown/agent-watch",
+  "repository": "https://github.com/menotbobbybrown/agent-watch"
+}

@@ -18,7 +18,7 @@ dist/
 .agents/
 .claude-plugin/
 hooks/
-dev-sync.sh
+agent-sync.sh
 
 # Non-runtime docs, plans, and tests
 tests/

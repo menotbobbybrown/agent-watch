@@ -22,7 +22,7 @@ Zero config to start — `yt-dlp` and `ffmpeg` install on first run via `brew` o
 
 AI agents can read a webpage, run a script, browse a repo. What they can't do, out of the box, is *watch a video*. You paste a YouTube link and it has to either guess from the title or pull a transcript that's missing 90% of what's on screen.
 
-With `agent-watch` you can paste a URL or a local path, ask a question, and Claude fetches captions first, downloads only what it needs, extracts frames (scene-aware, or fast keyframes at `efficient` detail), pulls a timestamped transcript (free captions when available, Whisper API as fallback), and `Read`s every frame as an image. By the time it answers, it has *seen* the video and *heard* the audio.
+With `agent-watch` you can paste a URL or a local path, ask a question, and the AI agent fetches captions first, downloads only what it needs, extracts frames (scene-aware, or fast keyframes at `efficient` detail), pulls a timestamped transcript (free captions when available, Whisper API as fallback), and `Read`s every frame as an image. By the time it answers, it has *seen* the video and *heard* the audio.
 
 ```
 /watch https://youtu.be/dQw4w9WgXcQ what happens at the 30 second mark?
@@ -148,7 +148,7 @@ git clone https://github.com/menotbobbybrown/agent-watch.git
 ln -s "$(pwd)/agent-watch/skills/watch" ~/.claude/skills/watch   # or ~/.codex/skills/watch
 ```
 
-For claude.ai, build the `.skill` bundle from source: `bash skills/watch/scripts/build-skill.sh` produces `dist/watch.skill`.
+For claude.ai, build the `.skill` bundle from source: `bash skills/watch/scripts/build-skill.sh` produces `dist/agent-watch.skill`.
 
 ## First run
 
@@ -191,7 +191,7 @@ Focused on a specific section — denser frame budget, lower token cost:
 Other knobs (passed to `scripts/watch.py`):
 
 - `--detail transcript|efficient|balanced|token-burner` — fidelity/speed dial. `transcript` skips frames (transcript only); `efficient` uses fast keyframes (cap 50); `balanced` uses scene-aware frames (cap 100); `token-burner` is scene-aware and uncapped.
-- `--timestamps T1,T2,…` — grab a frame at each absolute timestamp (`SS`/`MM:SS`/`HH:MM:SS`). Claude reads the transcript first, then targets the moments the presenter flags ("look here", "as you can see"). Added on top of the detail frames (reserved against the cap); out-of-window cues are dropped in focus mode; with `--detail transcript` these become the only frames.
+- `--timestamps T1,T2,…` — grab a frame at each absolute timestamp (`SS`/`MM:SS`/`HH:MM:SS`). the AI agent reads the transcript first, then targets the moments the presenter flags ("look here", "as you can see"). Added on top of the detail frames (reserved against the cap); out-of-window cues are dropped in focus mode; with `--detail transcript` these become the only frames.
 - `--max-frames N` — lower the frame cap for a tighter token budget.
 - `--resolution W` — bump frame width to 1024 px when the agent needs to read on-screen text (slides, terminals, code).
 - `--fps F` — override the auto-fps calculation (still capped at 2 fps).
@@ -219,7 +219,7 @@ Other knobs (passed to `scripts/watch.py`):
 │       ├── whisper.py            # Groq / OpenAI clients (pure stdlib)
 │       ├── config.py             # shared config (~/.config/watch/.env)
 │       ├── setup.py              # preflight + installer
-│       └── build-skill.sh        # build dist/watch.skill for claude.ai upload (dev-only)
+│       └── build-skill.sh        # build dist/agent-watch.skill for claude.ai upload (dev-only)
 ├── hooks/                        # SessionStart status hook (Claude Code only)
 ├── .claude-plugin/               # plugin.json + marketplace.json (Claude Code)
 ├── .codex-plugin/                # plugin.json — Codex/agents manifest ("skills": "./skills/")
@@ -236,10 +236,10 @@ Other knobs (passed to `scripts/watch.py`):
 python3 -m pytest -q
 
 # Build the claude.ai upload bundle:
-bash skills/watch/scripts/build-skill.sh      # → dist/watch.skill
+bash skills/watch/scripts/build-skill.sh      # → dist/agent-watch.skill
 ```
 
-Releasing: tag `vX.Y.Z`, push the tag. The workflow builds `dist/watch.skill` and attaches it to the GitHub release. Keep the version in sync across `skills/watch/SKILL.md`, `.claude-plugin/plugin.json`, and `.codex-plugin/plugin.json`.
+Releasing: tag `vX.Y.Z`, push the tag. The workflow builds `dist/agent-watch.skill` and attaches it to the GitHub release. Keep the version in sync across `skills/watch/SKILL.md`, `.claude-plugin/plugin.json`, and `.codex-plugin/plugin.json`.
 
 See [CHANGELOG.md](CHANGELOG.md) for version history.
 
@@ -247,7 +247,7 @@ See [CHANGELOG.md](CHANGELOG.md) for version history.
 
 MIT license.
 
-Built on `yt-dlp`, `ffmpeg`, and Claude's multimodal `Read` tool. Whisper transcription via [Groq](https://groq.com) or [OpenAI](https://openai.com).
+Built on `yt-dlp`, `ffmpeg`, and multimodal AI vision tools. Whisper transcription via [Groq](https://groq.com) or [OpenAI](https://openai.com).
 
 Built by menotbobbybrown & Antigravity Engineering.
 

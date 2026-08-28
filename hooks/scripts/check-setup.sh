@@ -4,13 +4,13 @@
 # is missing.
 set -euo pipefail
 
-CONFIG_FILE="$HOME/.config/watch/.env"
+CONFIG_FILE="$HOME/.config/agent-watch/.env"
 
 # Warn if the secrets file has loose permissions.
 if [[ -f "$CONFIG_FILE" ]]; then
   perms=$(stat -c '%a' "$CONFIG_FILE" 2>/dev/null || stat -f '%Lp' "$CONFIG_FILE" 2>/dev/null || echo "")
   if [[ -n "$perms" && "$perms" != "600" && "$perms" != "400" ]]; then
-    echo "/watch: WARNING — $CONFIG_FILE has permissions $perms (should be 600)."
+    echo "/agent-watch: WARNING — $CONFIG_FILE has permissions $perms (should be 600)."
     echo "  Fix: chmod 600 $CONFIG_FILE"
   fi
 fi
@@ -50,9 +50,9 @@ fi
 
 # First-run / partially-configured → one-line hint.
 if [[ -z "$HAS_FFMPEG" || -z "$HAS_YTDLP" ]]; then
-  echo "/watch: needs ffmpeg + yt-dlp. Run \`python3 \$CLAUDE_PLUGIN_ROOT/skills/watch/scripts/setup.py\` once to install and scaffold config."
+  echo "/agent-watch: needs ffmpeg + yt-dlp. Run \`python3 \$CLAUDE_PLUGIN_ROOT/skills/watch/scripts/setup.py\` once to install and scaffold config."
 elif [[ -z "$HAS_GROQ" && -z "$HAS_OPENAI" ]]; then
-  echo "/watch: ready for videos with native captions. Add GROQ_API_KEY (preferred) or OPENAI_API_KEY to ~/.config/watch/.env to unlock Whisper fallback."
+  echo "/agent-watch: ready for videos with native captions. Add GROQ_API_KEY (preferred) or OPENAI_API_KEY to ~/.config/agent-watch/.env to unlock Whisper fallback."
 else
-  echo "/watch: ready."
+  echo "/agent-watch: ready."
 fi

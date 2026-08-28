@@ -816,7 +816,29 @@ def extract_ocr_for_frames(frames: list[dict]) -> list[dict]:
 
     for f in frames:
         p = Path(f["path"])
-        txt = run_ocr_on_frame(p) if has_ocr_tool else None
+        txt = sanitize_ocr_text(run_ocr_on_frame(p)) if has_ocr_tool else None
         if txt:
             f["ocr_text"] = txt
     return frames
+
+JUNK_PATTERNS = [
+    "subscribe", "like and subscribe", "smash the like", "hit the bell",
+    "follow on twitter", "follow on instagram", "click link below",
+    "patreon.com", "sponsor", "advertisement", "all rights reserved",
+    "leave a comment", "share this video", "don't forget to subscribe"
+]
+
+def sanitize_ocr_text(raw_text: str) -> str:
+    """Filter out video junk lines (subscriber prompts, social media handles, sponsor logos, UI noise)."""
+    if not raw_text:
+        return ""
+    clean_lines = []
+    for line in raw_text.splitlines():
+        line_str = line.strip()
+        line_lower = line_str.lower()
+        if not line_str or len(line_str) < 3:
+            continue
+        if any(pat in line_lower for pat in JUNK_PATTERNS):
+            continue
+        clean_lines.append(line_str)
+    return "\n".join(clean_lines)

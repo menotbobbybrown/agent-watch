@@ -17,7 +17,7 @@ assets/        export-ignore
 examples/      export-ignore
 
 # Dev tooling and planning notes — repo-only, not shipped to any install surface
-dev-sync.sh      export-ignore
+agent-sync.sh      export-ignore
 V2_PLAN.md       export-ignore
 V2_CONCERNS.md   export-ignore
 .agents/         export-ignore

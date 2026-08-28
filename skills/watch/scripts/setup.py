@@ -3,7 +3,7 @@
 
 Modes:
   setup.py --check      Silent preflight. Exit 0 if ready, 2/3/4 on failure.
-  setup.py --json       Machine-readable status for Claude to parse.
+  setup.py --json       Machine-readable status for AI agents to parse.
   setup.py              Installer. Auto-installs deps, scaffolds .env, marks SETUP_COMPLETE.
 
 Design:
@@ -33,14 +33,18 @@ from config import get_config  # noqa: E402
 
 
 REQUIRED_BINARIES = ["ffmpeg", "ffprobe", "yt-dlp"]
-CONFIG_DIR = Path.home() / ".config" / "watch"
-CONFIG_FILE = CONFIG_DIR / ".env"
-AGENT_WATCH_CONFIG = Path.home() / ".config" / "agent-watch" / ".env"
+
+def get_config_dir() -> Path:
+    return Path.home() / ".config" / "agent-watch"
 
 def _resolve_config_file() -> Path:
-    if AGENT_WATCH_CONFIG.exists():
-        return AGENT_WATCH_CONFIG
-    return CONFIG_FILE
+    aw_cfg = Path.home() / ".config" / "agent-watch" / ".env"
+    if aw_cfg.exists():
+        return aw_cfg
+    legacy_cfg = Path.home() / ".config" / "watch" / ".env"
+    if legacy_cfg.exists():
+        return legacy_cfg
+    return aw_cfg
 
 ENV_TEMPLATE = """# /watch API configuration
 #
@@ -138,12 +142,12 @@ def is_first_run() -> bool:
 
 def _scaffold_env() -> bool:
     """Create ~/.config/watch/.env with placeholders if missing."""
-    if CONFIG_FILE.exists():
+    if _resolve_config_file().exists():
         return False
-    CONFIG_DIR.mkdir(parents=True, exist_ok=True)
-    CONFIG_FILE.write_text(ENV_TEMPLATE, encoding="utf-8")
+    get_config_dir().mkdir(parents=True, exist_ok=True)
+    _resolve_config_file().write_text(ENV_TEMPLATE, encoding="utf-8")
     try:
-        CONFIG_FILE.chmod(0o600)
+        _resolve_config_file().chmod(0o600)
     except OSError:
         pass
     return True
@@ -155,20 +159,20 @@ def _write_setup_complete() -> None:
     Used only after a fully successful install (deps + key). Future sessions
     detect this marker to skip wizard-style UI and stay silent.
     """
-    CONFIG_DIR.mkdir(parents=True, exist_ok=True)
+    get_config_dir().mkdir(parents=True, exist_ok=True)
     existing = ""
-    if CONFIG_FILE.exists():
+    if _resolve_config_file().exists():
         existing = cfg_file.read_text(encoding="utf-8")
         for line in existing.splitlines():
             if line.strip().startswith("SETUP_COMPLETE="):
                 return
         if existing and not existing.endswith("\n"):
             existing += "\n"
-        CONFIG_FILE.write_text(existing + "SETUP_COMPLETE=true\n", encoding="utf-8")
+        _resolve_config_file().write_text(existing + "SETUP_COMPLETE=true\n", encoding="utf-8")
     else:
-        CONFIG_FILE.write_text(ENV_TEMPLATE + "\nSETUP_COMPLETE=true\n", encoding="utf-8")
+        _resolve_config_file().write_text(ENV_TEMPLATE + "\nSETUP_COMPLETE=true\n", encoding="utf-8")
     try:
-        CONFIG_FILE.chmod(0o600)
+        _resolve_config_file().chmod(0o600)
     except OSError:
         pass
 
@@ -260,7 +264,7 @@ def _status() -> dict:
         "missing_binaries": missing,
         "whisper_backend": backend,
         "has_api_key": has_key,
-        "config_file": str(CONFIG_FILE),
+        "config_file": str(_resolve_config_file()),
         "watch_detail": cfg["detail"],
         "platform": platform.system(),
     }
@@ -337,9 +341,9 @@ def cmd_install() -> int:
 
     created = _scaffold_env()
     if created:
-        print(f"[setup] created config: {CONFIG_FILE}")
+        print(f"[setup] created config: {_resolve_config_file()}")
     else:
-        print(f"[setup] config exists: {CONFIG_FILE}")
+        print(f"[setup] config exists: {_resolve_config_file()}")
 
     has_key, backend = _have_api_key()
     if has_key:
@@ -352,7 +356,7 @@ def cmd_install() -> int:
     print("")
     print("[setup] one step left: add a Whisper API key.")
     print("")
-    print(f"  Edit {CONFIG_FILE} and set either:")
+    print(f"  Edit {_resolve_config_file()} and set either:")
     print("    GROQ_API_KEY=...    (preferred — cheaper, faster; get one at console.groq.com/keys)")
     print("    OPENAI_API_KEY=...  (fallback; get one at platform.openai.com/api-keys)")
     print("")
