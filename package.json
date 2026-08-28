@@ -1,11 +1,14 @@
 {
-  "name": "agent-watch",
+  "name": "@menotbobbybrown/agent-watch",
   "version": "1.0.0",
   "description": "Universal video engine for any AI agent: download video, extract frames, surface transcripts, and run autonomous visual analysis.",
   "main": "lib/index.js",
   "bin": {
-    "agent-watch": "./bin/agent-watch.js",
-    "agentwatch": "./bin/agent-watch.js"
+    "agent-watch": "bin/agent-watch.js",
+    "agentwatch": "bin/agent-watch.js"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "test": "python -m pytest -v",
