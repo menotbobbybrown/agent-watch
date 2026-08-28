@@ -3,11 +3,17 @@
 const { spawn } = require('child_process');
 const path = require('path');
 
-const watchScript = path.join(__dirname, '..', 'skills', 'watch', 'scripts', 'watch.py');
+const scriptsDir = path.join(__dirname, '..', 'skills', 'watch', 'scripts');
+const watchScript = path.join(scriptsDir, 'watch.py');
 const pythonExecutable = process.platform === 'win32' ? 'python' : 'python3';
 const args = [watchScript, ...process.argv.slice(2)];
 
-const proc = spawn(pythonExecutable, args, { stdio: 'inherit' });
+const env = { 
+  ...process.env, 
+  PYTHONPATH: scriptsDir + (process.env.PYTHONPATH ? path.delimiter + process.env.PYTHONPATH : '') 
+};
+
+const proc = spawn(pythonExecutable, args, { stdio: 'inherit', env });
 
 proc.on('error', (err) => {
   if (err.code === 'ENOENT') {
