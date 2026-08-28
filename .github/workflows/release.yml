@@ -17,15 +17,28 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
       - name: Build .skill artifact
         run: |
           bash skills/watch/scripts/build-skill.sh
-          test -f dist/watch.skill
+          test -f dist/agent-watch.skill
+
+      - name: Build PyPI wheel distribution
+        run: |
+          python -m pip install --upgrade build
+          python -m build
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/watch.skill
+          files: |
+            dist/agent-watch.skill
+            dist/*.whl
+            dist/*.tar.gz
           generate_release_notes: true
           draft: false
           prerelease: false
