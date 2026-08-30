@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "agent-watch"
-version = "1.0.2"
+version = "1.0.3"
 description = "Universal video engine for any AI agent: download video, extract frames, surface transcripts, and run autonomous visual analysis."
 readme = "README.md"
 requires-python = ">=3.9"
