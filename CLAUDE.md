@@ -1,3 +1,5 @@
+@README_AI.md
+
 @AGENTS.md
 
 # CLAUDE.md — Agent Watch Reference
