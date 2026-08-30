@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+import json
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.resolve()))
 """agent-watch entry point: download video, extract frames, parse transcript.
 
 Universal video watching engine for any AI agent in the world (Antigravity, OpenCode, Claude Code, Codex, Cursor, etc.).
 Prints a markdown report to stdout listing frame paths + transcript.
 """
-from __future__ import annotations
 
 import argparse
 import sys
@@ -21,7 +25,6 @@ for _stream in (sys.stdout, sys.stderr):
             pass
 
 SCRIPT_DIR = Path(__file__).parent.resolve()
-sys.path.insert(0, str(SCRIPT_DIR))
 
 from config import frame_cap, get_config, cookies_from_browser, sub_langs  # noqa: E402
 from download import download, fetch_captions, is_url  # noqa: E402
