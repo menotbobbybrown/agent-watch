@@ -1,5 +1,5 @@
 {
-  "name": "@modelnorth/agent-watch",
+  "name": "modelnorth-agent-watch",
   "version": "1.0.3",
   "description": "Universal video engine for any AI agent: download video, extract frames, surface transcripts, and run autonomous visual analysis.",
   "main": "lib/index.js",
@@ -21,6 +21,7 @@
   },
   "keywords": [
     "modelnorth",
+    "agent-watch",
     "ai-agent",
     "video-processing",
     "yt-dlp",
